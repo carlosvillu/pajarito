@@ -7,10 +7,18 @@ import {Pajarito} from './domain'
 
 const pajarito = new Pajarito()
 
-pajarito.get('loginUserUseCase').execute({
-  username: '1234',
-  password: 'abcdefgh'
-})
+pajarito
+  .get('currentUserUseCase')
+  .execute()
+  .then(console.log)
+
+// pajarito
+//   .get('loginUserUseCase')
+//   .execute({
+//     username: '1234',
+//     password: 'abcdefgh'
+//   })
+//   .then(console.log)
 
 ReactDOM.render(
   <React.StrictMode>

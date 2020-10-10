@@ -8,7 +8,7 @@ export class PasswordValueObject extends ValueObject {
   static validate({password}) {
     if (!password || !password.length || password.length < MIN_LENGTH) {
       throw new Error(
-        `[UserNameValueObject.validate] forbidden password lower than ${MIN_LENGTH} characters`
+        `[PasswordValueObject.validate] forbidden password lower than ${MIN_LENGTH} characters`
       )
     }
   }

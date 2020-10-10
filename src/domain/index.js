@@ -1,8 +1,10 @@
 import {UserUseCasesFactory} from './user/UseCases/factories'
 
 const USE_CASES = {
-  registerUserUseCase: UserUseCasesFactory.registerUserUseCase(),
-  loginUserUseCase: UserUseCasesFactory.loginUserUseCase()
+  currentUserUseCase: UserUseCasesFactory.currentUserUseCase(),
+  logoutUserUseCase: UserUseCasesFactory.logoutUserUseCase(),
+  loginUserUseCase: UserUseCasesFactory.loginUserUseCase(),
+  registerUserUseCase: UserUseCasesFactory.registerUserUseCase()
 }
 
 export class Pajarito {
