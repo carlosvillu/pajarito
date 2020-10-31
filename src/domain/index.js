@@ -1,6 +1,11 @@
+import {TrinoUseCasesFactory} from './trino/UseCases/factories'
+
 import {UserUseCasesFactory} from './user/UseCases/factories'
 
 const USE_CASES = {
+  listTrinoUseCase: TrinoUseCasesFactory.listTrinoUseCase(),
+  createTrinoUseCase: TrinoUseCasesFactory.createTrinoUseCase(),
+
   currentUserUseCase: UserUseCasesFactory.currentUserUseCase(),
   logoutUserUseCase: UserUseCasesFactory.logoutUserUseCase(),
   loginUserUseCase: UserUseCasesFactory.loginUserUseCase(),

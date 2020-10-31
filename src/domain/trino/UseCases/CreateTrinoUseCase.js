@@ -13,13 +13,13 @@ export class CreateTrinoUseCase extends UseCase {
     this.#currentUserService = currentUserService
   }
 
-  async execute({body}) {
-    const bodyTrino = this.#bodyValueObjectFactory({body})
-    const currentUserEntity = this.#currentUserService.execute()
+  async execute({body: intro}) {
+    const body = this.#bodyValueObjectFactory({body: intro})
+    const currentUser = await this.#currentUserService.execute()
 
     const trino = this.#repository.create({
-      body: bodyTrino,
-      user: currentUserEntity
+      body,
+      user: currentUser
     })
 
     return trino.toJSON()
