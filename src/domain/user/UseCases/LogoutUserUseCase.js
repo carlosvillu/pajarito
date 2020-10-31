@@ -1,3 +1,4 @@
+import {invalidateCache} from '@s-ui/decorators'
 import {UseCase} from '../../common/UseCase'
 
 export class LogoutUserUseCase extends UseCase {
@@ -9,6 +10,7 @@ export class LogoutUserUseCase extends UseCase {
     this.#repository = repository
   }
 
+  @invalidateCache({cacheKeyString: 'CurrentUserUseCase'})
   async execute() {
     const logoutUserStatus = await this.#repository.logout()
 

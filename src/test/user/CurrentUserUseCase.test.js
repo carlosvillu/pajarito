@@ -10,8 +10,9 @@ describe('CurrentUserUseCase#execute', () => {
     domain = null
   })
   it('Happy path', async () => {
-    const logout = await domain.get('logoutUserUseCase').execute()
+    const [error, logout] = await domain.get('logoutUserUseCase').execute()
 
+    expect(error).toEqual(null)
     expect(logout.status).toEqual(true)
   })
 })

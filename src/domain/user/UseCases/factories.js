@@ -10,12 +10,6 @@ import {LogoutUserUseCase} from './LogoutUserUseCase'
 const isNODE = typeof window === 'undefined'
 
 export class UserUseCasesFactory {
-  static currentUserUseCase() {
-    return new CurrentUserUseCase({
-      service: UserServicesFactory.currentUserService()
-    })
-  }
-
   static logoutUserUseCase() {
     return new LogoutUserUseCase({
       repository: isNODE
@@ -23,24 +17,31 @@ export class UserUseCasesFactory {
         : UserRepositoriesFactory.localStorageUserRepository()
     })
   }
-
-  static loginUserUseCase() {
-    return new LoginUserUseCase({
-      repository: isNODE
-        ? UserRepositoriesFactory.inMemoryUserRepository()
-        : UserRepositoriesFactory.localStorageUserRepository(),
-      usernameValueObjectFactory: UserValueObjectsFactory.usernameValueObject,
-      passwordValueObjectFactory: UserValueObjectsFactory.passwordValueObject
-    })
-  }
-
-  static registerUserUseCase() {
-    return new RegisterUserUseCase({
-      repository: isNODE
-        ? UserRepositoriesFactory.inMemoryUserRepository()
-        : UserRepositoriesFactory.localStorageUserRepository(),
-      usernameValueObjectFactory: UserValueObjectsFactory.usernameValueObject,
-      passwordValueObjectFactory: UserValueObjectsFactory.passwordValueObject
-    })
-  }
 }
+
+//   static currentUserUseCase() {
+//     return new CurrentUserUseCase({
+//       service: UserServicesFactory.currentUserService()
+//     })
+//   }
+//
+//   static loginUserUseCase() {
+//     return new LoginUserUseCase({
+//       repository: isNODE
+//         ? UserRepositoriesFactory.inMemoryUserRepository()
+//         : UserRepositoriesFactory.localStorageUserRepository(),
+//       usernameValueObjectFactory: UserValueObjectsFactory.usernameValueObject,
+//       passwordValueObjectFactory: UserValueObjectsFactory.passwordValueObject
+//     })
+//   }
+//
+//   static registerUserUseCase() {
+//     return new RegisterUserUseCase({
+//       repository: isNODE
+//         ? UserRepositoriesFactory.inMemoryUserRepository()
+//         : UserRepositoriesFactory.localStorageUserRepository(),
+//       usernameValueObjectFactory: UserValueObjectsFactory.usernameValueObject,
+//       passwordValueObjectFactory: UserValueObjectsFactory.passwordValueObject
+//     })
+//   }
+// }

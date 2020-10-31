@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@s-ui/decorators": "3",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
@@ -38,6 +39,6 @@
     "extends": "./node_modules/@s-ui/lint/stylelint.config.js"
   },
   "devDependencies": {
-    "@s-ui/lint": "3.17.0"
+    "@s-ui/lint": "3"
   }
 }
