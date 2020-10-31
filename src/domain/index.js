@@ -21,3 +21,7 @@ export class Pajarito {
     return USE_CASES[key]
   }
 }
+
+export const ERRORS = {
+  TRINO: {}
+}

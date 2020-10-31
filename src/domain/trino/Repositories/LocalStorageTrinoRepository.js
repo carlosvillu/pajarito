@@ -1,3 +1,5 @@
+import {asyncInlineError} from '../../../decorators/asyncInlineError'
+
 import {TrinoRepository} from './TrinoRepository'
 import {TrinoEntity} from '../Entities/TrinoEntity'
 
@@ -5,20 +7,34 @@ const EMPTY_DB = JSON.stringify({trinos: []})
 const TRINOS_KEY = 'trinos'
 
 export class LocalStorageTrinoRepository extends TrinoRepository {
+  #notFoundListTrinoErrorFactory
   #trinosListValueFactory
   #trinoEntityFactory
   #localStorage
 
-  constructor({localStorage, trinoEntityFactory, trinosListValueFactory}) {
+  constructor({
+    localStorage,
+    trinoEntityFactory,
+    trinosListValueFactory,
+    notFoundListTrinoErrorFactory
+  }) {
     super()
     this.#localStorage = localStorage
     this.#trinoEntityFactory = trinoEntityFactory
     this.#trinosListValueFactory = trinosListValueFactory
+    this.#notFoundListTrinoErrorFactory = notFoundListTrinoErrorFactory
   }
 
+  @asyncInlineError()
   all() {
     const trinosJSON = this.#localStorage.getItem(TRINOS_KEY) || EMPTY_DB
     const trinosDB = JSON.parse(trinosJSON)
+
+    delete trinosDB.trinos
+
+    if (!trinosDB.trinos) {
+      throw this.#notFoundListTrinoErrorFactory()
+    }
 
     const trinos = trinosDB.trinos.map(this.#trinoEntityFactory)
 
