@@ -30,8 +30,6 @@ export class LocalStorageTrinoRepository extends TrinoRepository {
     const trinosJSON = this.#localStorage.getItem(TRINOS_KEY) || EMPTY_DB
     const trinosDB = JSON.parse(trinosJSON)
 
-    delete trinosDB.trinos
-
     if (!trinosDB.trinos) {
       throw this.#notFoundListTrinoErrorFactory()
     }
