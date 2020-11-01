@@ -1,0 +1,15 @@
+.add-trino-form {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+
+  & > *:not(:last-child) {
+    margin-bottom: 1rem;
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+}

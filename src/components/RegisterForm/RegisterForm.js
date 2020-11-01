@@ -27,7 +27,7 @@ export function RegisterForm() {
   }
 
   return (
-    <Paper elevation="3" className={s['register-form']}>
+    <Paper elevation={3} className={s['register-form']}>
       <Typography variant="h4" component="h1">
         Register
       </Typography>

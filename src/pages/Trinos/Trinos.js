@@ -1,38 +1,45 @@
-import React, {useState, useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import {Layout} from '../../components/Layout/Layout'
 import Container from '@material-ui/core/Container'
 import s from './Trinos.module.scss'
 import {TrinoList} from '../../components/TrinoList/TrinoList'
+import PropTypes from 'prop-types'
 import {Pajarito} from '../../domain'
-import {Link} from 'react-router-dom'
-import Button from '@material-ui/core/Button'
+import {AddTrinoFavButton} from '../../components/AddTrinoFavButton/AddTrinoFavButton'
 
-export function Trinos() {
-  const [user, setUser] = useState(null)
+export function Trinos({user}) {
+  const [trinos, setTrinos] = useState([])
+  const [error, setError] = useState(null)
 
   useEffect(() => {
-    const pajarito = new Pajarito()
-    pajarito
-      .get('currentUserUseCase')
-      .execute()
-      .then(data => setUser(data))
-  }, [])
+    async function fn() {
+      const pajarito = new Pajarito()
+      const [error, data] = await pajarito.get('listTrinoUseCase').execute()
 
-  if (!user)
-    return (
-      <Container maxWidth="sm" className={s.trinos__container}>
-        Please login to see this page
-        <Button type="Button" color="primary" component={Link} to="/login">
-          Login
-        </Button>
-      </Container>
-    )
+      if (error) {
+        return setError({
+          name: error.constructor.name,
+          message: error.message
+        })
+      }
+
+      return setTrinos(data.trinos)
+    }
+
+    fn()
+  }, [])
 
   return (
     <Layout name="Trinos" userName={user.username}>
       <Container maxWidth="sm" className={s.trinos__container}>
-        <TrinoList />
+        {error ? <div>Error to get trinos</div> : <TrinoList trinos={trinos} />}
       </Container>
+
+      <AddTrinoFavButton user={user} />
     </Layout>
   )
+}
+
+Trinos.propTypes = {
+  user: PropTypes.object
 }

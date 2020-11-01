@@ -27,7 +27,7 @@ export function LoginForm() {
   }
 
   return (
-    <Paper elevation="3" className={s['login-form']}>
+    <Paper elevation={3} className={s['login-form']}>
       <Typography variant="h4" component="h1">
         Login
       </Typography>
