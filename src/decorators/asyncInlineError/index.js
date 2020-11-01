@@ -1,30 +1,72 @@
-export const asyncInlineError = () =>
-  function(Target, name, descriptor) {
-    const {value: fn} = descriptor
-
-    return Object.assign(
-      {},
-      {
-        set(value) {
-          Object.defineProperty(this, name, {value}) // eslint-disable-line
-          return value
-        },
-        get() {
-          const self = this
-          async function _inlineError() {
-            let response
-            try {
-              response = await fn.apply(self, arguments)
-              return [null, response]
-            } catch (error) {
-              return [error, null]
-            }
-          }
-
-          Object.defineProperty(this, name, {value: _inlineError}) // eslint-disable-line
-
-          return _inlineError
-        }
-      }
-    )
+const _runner = ({instance, original} = {}) => {
+  return function(...args) {
+    const response = []
+    Object.defineProperty(response, '__INLINE_ERROR__', {
+      enumerable: false,
+      writable: true,
+      value: true
+    })
+    try {
+      const returns = original.apply(
+        instance.__STREAMIFY__ ? this : instance,
+        args
+      )
+      return returns
+        .then(r => {
+          response[0] = null
+          response[1] = r
+          return response
+        })
+        .catch(e => {
+          response[0] = e
+          response[1] = null
+          return Promise.resolve(response)
+        })
+    } catch (e) {
+      response[0] = e
+      response[1] = null
+      return response
+    }
   }
+}
+
+export const asyncInlineError = () => (target, fnName, descriptor) => {
+  const {value: fn, configurable, enumerable} = descriptor
+
+  // https://github.com/jayphelps/core-decorators.js/blob/master/src/autobind.js
+  return Object.assign(
+    {},
+    {
+      configurable,
+      enumerable,
+      get() {
+        const _fnRunner = _runner({
+          instance: this,
+          original: fn
+        })
+
+        if (this === target && !target.__STREAMIFY__) {
+          return fn
+        }
+
+        Object.defineProperty(this, fnName, {
+          configurable: true,
+          writable: true,
+          enumerable: false,
+          value: _fnRunner
+        })
+        return _fnRunner
+      },
+      set(newValue) {
+        Object.defineProperty(this, fnName, {
+          configurable: true,
+          writable: true,
+          enumerable: true,
+          value: newValue
+        })
+
+        return newValue
+      }
+    }
+  )
+}

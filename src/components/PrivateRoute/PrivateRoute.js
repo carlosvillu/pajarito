@@ -1,19 +1,25 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useContext} from 'react'
 import {Route, Redirect} from 'react-router-dom'
-import {Pajarito} from '../../domain'
 import PropTypes from 'prop-types'
 
+import {Global} from '../../contexts/global'
+
 export function PrivateRoute({component: Component, ...rest}) {
+  const {domain} = useContext(Global)
   const [user, setUser] = useState(null)
 
   // needs login on each refresh
   useEffect(() => {
-    const pajarito = new Pajarito()
-    pajarito
+    domain
       .get('currentUserUseCase')
       .execute()
-      .then(data => setUser(data))
-  }, [])
+      .then(([error, data]) => {
+        if (error) {
+          return window.alert(error.message)
+        }
+        setUser(data)
+      })
+  }, [domain])
 
   return (
     <Route

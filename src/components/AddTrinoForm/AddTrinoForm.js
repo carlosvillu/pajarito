@@ -1,20 +1,24 @@
-import React, {useState} from 'react'
+import React, {useState, useContext} from 'react'
 import PropTypes from 'prop-types'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
-import {Pajarito} from '../../domain/index'
 import s from './AddTrinoForm.module.scss'
 
+import {Global} from '../../contexts/global'
+
 export function AddTrinoForm({cb}) {
+  const {domain} = useContext(Global)
   const [data, setData] = useState({})
 
-  function onAddTrino(e) {
+  async function onAddTrino(e) {
     e.preventDefault()
-    const pajarito = new Pajarito()
-    pajarito
-      .get('createTrinoUseCase')
-      .execute(data)
-      .then(cb)
+    const [error, trino] = await domain.get('createTrinoUseCase').execute(data)
+
+    if (error) {
+      return window.alert(error.message)
+    }
+
+    cb(trino)
   }
 
   function onChange(e) {

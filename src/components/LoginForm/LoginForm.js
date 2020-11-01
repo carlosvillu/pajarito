@@ -1,23 +1,33 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect, useContext} from 'react'
 import Paper from '@material-ui/core/Paper'
 import s from './LoginForm.module.scss'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import {Link, useHistory} from 'react-router-dom'
-import {Pajarito} from '../../domain/index'
+import {Global} from '../../contexts/global'
 
 export function LoginForm() {
+  const {domain} = useContext(Global)
   const [data, setData] = useState({})
   const history = useHistory()
 
-  function onLogin(e) {
+  useEffect(() => {
+    domain
+      .get('currentUserUseCase')
+      .execute()
+      .then(([error, user]) => {
+        if (error) {
+          return null
+        }
+        user && history.push('/')
+      })
+  }, [domain, history])
+
+  async function onLogin(e) {
     e.preventDefault()
-    const pajarito = new Pajarito()
-    pajarito
-      .get('loginUserUseCase')
-      .execute(data)
-      .then(() => history.push('/'))
+    await domain.get('loginUserUseCase').execute(data)
+    history.push('/')
   }
 
   function onChange(e) {

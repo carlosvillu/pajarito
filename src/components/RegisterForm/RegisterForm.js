@@ -1,23 +1,26 @@
-import React, {useState} from 'react'
+import React, {useState, useContext} from 'react'
 import Paper from '@material-ui/core/Paper'
 import s from './RegisterForm.module.scss'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import {Link, useHistory} from 'react-router-dom'
-import {Pajarito} from '../../domain/index'
+
+import {Global} from '../../contexts/global'
 
 export function RegisterForm() {
+  const {domain} = useContext(Global)
   const [data, setData] = useState({})
   const history = useHistory()
 
-  function onRegister(e) {
+  async function onRegister(e) {
     e.preventDefault()
-    const pajarito = new Pajarito()
-    pajarito
-      .get('registerUserUseCase')
-      .execute(data)
-      .then(() => history.push('/login'))
+    const [error] = await domain.get('registerUserUseCase').execute(data)
+
+    if (error) {
+      return window.alert(error.message)
+    }
+    history.push('/login')
   }
 
   function onChange(e) {

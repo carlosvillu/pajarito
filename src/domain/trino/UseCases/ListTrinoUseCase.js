@@ -1,7 +1,8 @@
-import {asyncInlineError} from '../../../decorators/asyncInlineError'
+import {streamify, asyncInlineError} from '../../../decorators'
 import {UseCase} from '../../common/UseCase'
 
-export class ListTrinoUseCase extends UseCase {
+@streamify('execute')
+class ListTrinoUseCase extends UseCase {
   #somethingWrongTrinoErrorFactory
   #repository
 
@@ -22,3 +23,5 @@ export class ListTrinoUseCase extends UseCase {
     return TrinosList.toJSON()
   }
 }
+
+export {ListTrinoUseCase}

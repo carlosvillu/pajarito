@@ -1,6 +1,8 @@
+import {streamify, asyncInlineError} from '../../../decorators'
 import {UseCase} from '../../common/UseCase'
 
-export class CreateTrinoUseCase extends UseCase {
+@streamify('execute')
+class CreateTrinoUseCase extends UseCase {
   #repository
   #bodyValueObjectFactory
   #currentUserService
@@ -13,11 +15,12 @@ export class CreateTrinoUseCase extends UseCase {
     this.#currentUserService = currentUserService
   }
 
+  @asyncInlineError()
   async execute({body: intro}) {
     const body = this.#bodyValueObjectFactory({body: intro})
     const currentUser = await this.#currentUserService.execute()
 
-    const trino = this.#repository.create({
+    const trino = await this.#repository.create({
       body,
       user: currentUser
     })
@@ -25,3 +28,5 @@ export class CreateTrinoUseCase extends UseCase {
     return trino.toJSON()
   }
 }
+
+export {CreateTrinoUseCase}

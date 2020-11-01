@@ -26,7 +26,7 @@ export class LocalStorageTrinoRepository extends TrinoRepository {
   }
 
   @asyncInlineError()
-  all() {
+  async all() {
     const trinosJSON = this.#localStorage.getItem(TRINOS_KEY) || EMPTY_DB
     const trinosDB = JSON.parse(trinosJSON)
 
@@ -41,7 +41,7 @@ export class LocalStorageTrinoRepository extends TrinoRepository {
     })
   }
 
-  create({body, user}) {
+  async create({body, user}) {
     const id = TrinoEntity.generateUUID()
     const trinosJSON = this.#localStorage.getItem(TRINOS_KEY) || EMPTY_DB
     const trinosDB = JSON.parse(trinosJSON)
