@@ -17,7 +17,7 @@ export function Layout({name, userName, children}) {
             <Typography variant="h6">{name}</Typography>
 
             <Button startIcon={<AccountCircle />} color="inherit">
-              <Typography variant="body1">{name}</Typography>
+              <Typography variant="body1">{userName}</Typography>
             </Button>
           </Toolbar>
         </Container>
