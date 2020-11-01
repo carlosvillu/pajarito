@@ -1,0 +1,9 @@
+.trino-list {
+  display: flex;
+  flex-direction: column;
+
+  &__trino {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+}

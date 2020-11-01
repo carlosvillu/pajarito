@@ -1,0 +1,10 @@
+.login {
+  height: 100%;
+
+  &__content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}

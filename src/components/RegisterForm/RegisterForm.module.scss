@@ -1,0 +1,23 @@
+.register-form {
+  padding: 2rem;
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1rem;
+
+    & > *:not(:last-child) {
+      margin-bottom: 1rem;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: row;
+
+    & > *:not(:last-child) {
+      margin-right: 1rem;
+    }
+  }
+}
