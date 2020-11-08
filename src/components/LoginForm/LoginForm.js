@@ -18,6 +18,7 @@ export function LoginForm() {
       .execute()
       .then(([error, user]) => {
         if (error) {
+          console.log(error)
           return null
         }
         user && history.push('/')
@@ -26,7 +27,8 @@ export function LoginForm() {
 
   async function onLogin(e) {
     e.preventDefault()
-    await domain.get('loginUserUseCase').execute(data)
+    const [error] = await domain.get('loginUserUseCase').execute(data)
+    if (error) return console.log(error)
     history.push('/')
   }
 
