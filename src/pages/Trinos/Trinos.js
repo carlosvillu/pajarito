@@ -1,15 +1,15 @@
-import React, {useEffect, useState, useContext} from 'react'
-import {Layout} from '../../components/Layout/Layout'
+import React, { useEffect, useState, useContext } from 'react'
+import { Layout } from '../../components/Layout/Layout'
 import Container from '@material-ui/core/Container'
 import s from './Trinos.module.scss'
-import {TrinoList} from '../../components/TrinoList/TrinoList'
+import { TrinoList } from '../../components/TrinoList/TrinoList'
 import PropTypes from 'prop-types'
-import {AddTrinoFavButton} from '../../components/AddTrinoFavButton/AddTrinoFavButton'
+import { AddTrinoFavButton } from '../../components/AddTrinoFavButton/AddTrinoFavButton'
 
-import {Global} from '../../contexts/global'
+import { Global } from '../../contexts/global'
 
-export function Trinos({user}) {
-  const {domain} = useContext(Global)
+export function Trinos({ user }) {
+  const { domain } = useContext(Global)
   const [trinos, setTrinos] = useState([])
   const [error, setError] = useState(null)
 
@@ -20,7 +20,7 @@ export function Trinos({user}) {
       if (error) {
         return setError({
           name: error.constructor.name,
-          message: error.message
+          message: error.message,
         })
       }
 
@@ -31,9 +31,16 @@ export function Trinos({user}) {
   }, [domain])
 
   useEffect(() => {
-    const createTrinoUseCase$ = domain.get('createTrinoUseCase').$.execute.subscribe( // eslint-disable-line
-        ({result}) => {setTrinos([result, ...trinos])}, // eslint-disable-line
-        error => {window.alert(error)} // eslint-disable-line
+    const createTrinoUseCase$ = domain
+      .get('createTrinoUseCase')
+      .$.execute.subscribe(
+        // eslint-disable-line
+        ({ result }) => {
+          setTrinos([result, ...trinos])
+        }, // eslint-disable-line
+        (error) => {
+          window.alert(error)
+        } // eslint-disable-line
       )
 
     return () => createTrinoUseCase$.dispose()
@@ -51,5 +58,5 @@ export function Trinos({user}) {
 }
 
 Trinos.propTypes = {
-  user: PropTypes.object
+  user: PropTypes.object,
 }

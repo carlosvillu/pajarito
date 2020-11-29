@@ -1,14 +1,14 @@
-import React, {useState, useEffect, useContext} from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import Paper from '@material-ui/core/Paper'
 import s from './LoginForm.module.scss'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
-import {Link, useHistory} from 'react-router-dom'
-import {Global} from '../../contexts/global'
+import { Link, useHistory } from 'react-router-dom'
+import { Global } from '../../contexts/global'
 
 export function LoginForm() {
-  const {domain} = useContext(Global)
+  const { domain } = useContext(Global)
   const [data, setData] = useState({})
   const history = useHistory()
 
@@ -18,6 +18,7 @@ export function LoginForm() {
       .execute()
       .then(([error, user]) => {
         if (error) {
+          console.log(error) // eslint-disable-line no-console
           return null
         }
         user && history.push('/')
@@ -26,14 +27,15 @@ export function LoginForm() {
 
   async function onLogin(e) {
     e.preventDefault()
-    await domain.get('loginUserUseCase').execute(data)
+    const [error] = await domain.get('loginUserUseCase').execute(data)
+    if (error) return console.log(error) // eslint-disable-line no-console
     history.push('/')
   }
 
   function onChange(e) {
-    const {name, value} = e.target
+    const { name, value } = e.target
 
-    setData({...data, [name]: value})
+    setData({ ...data, [name]: value })
   }
 
   return (

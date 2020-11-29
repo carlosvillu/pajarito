@@ -1,7 +1,7 @@
 import React from 'react'
 import Container from '@material-ui/core/Container'
 import s from './Login.module.scss'
-import {LoginForm} from '../../components/LoginForm/LoginForm'
+import { LoginForm } from '../../components/LoginForm/LoginForm'
 
 export function Login() {
   return (
