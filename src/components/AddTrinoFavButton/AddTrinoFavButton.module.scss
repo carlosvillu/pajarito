@@ -1,0 +1,11 @@
+.add-trino-fav-button {
+  position: fixed !important;
+  bottom: 1.5rem;
+  right: 1.5rem;
+
+  &__dialog-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}

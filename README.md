@@ -1,46 +1,72 @@
-# Getting Started with Create React App
+Domain Driven Design strategies for the Frontend Architecture
+-------------------------------------------------------------
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This repo contains an example of design strategies to build a clean frontend architecture. It uses a tweet clone as an example.
 
-## Available Scripts
+![flow](./public/assets/flow.svg)
 
-In the project directory, you can run:
+# The building blocks
 
-### `yarn start`
+## Use Case
+The verb of the architecture. To be used only to communicate with the exterior world.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+![useCase](./public/assets/useCase.svg)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Service
+The verb of the architecture. to be used only inside the domain.
 
-### `yarn test`
+## Entity Objects
+Are objects that has an entity. This objects are mutable.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Value Objects
+Are objects that identify by his value. This objects should be inmutable.
 
-### `yarn build`
+## Agregates
+Are a group of objects considered as a unit regard to data changes.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Factories
+Are used to encapsulate the knowledge neccesary for the object creation.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Repositories
+Are used to encapsulate all the logic needed to obtain object references. Acts as a storage place for globally accesible objects. Can contain links to the infraestructure eg. the database.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Modules
+Are a way to split the domain in managable parts.
 
-### `yarn eject`
+# Folder structure
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+```
+├── domain
+│   ├── index
+│   ├── common (context)
+│   │   ├── Entity
+│   │   ├── Service
+│   │   ├── UseCase
+│   │   └── ValueObject
+│   ├── trino (context)
+│   │   └── UseCases
+│   │       └── CreateTrinoUseCase
+│   └── user (context)
+│       ├── Entities
+│       │   ├── UserEntity
+│       │   └── factories
+│       ├── Repositories
+│       │   ├── InMemoryUserRepository
+│       │   ├── LocalStorageUserRepository
+│       │   ├── UserRepository
+│       │   └── factories
+│       ├── Services
+│       │   ├── CurrentUserService
+│       │   └── factory
+│       ├── UseCases
+│       │   ├── CurrentUserUseCase
+│       │   ├── LoginUserUseCase
+│       │   ├── LogoutUserUseCase
+│       │   ├── RegisterUserUseCase
+│       │   └── factories
+│       └── ValueObjects
+│           ├── PasswordValueObject
+│           ├── StatusValueObject
+│           ├── UserNameValueObject
+│           └── factories
+```
