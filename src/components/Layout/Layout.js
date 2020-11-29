@@ -1,4 +1,4 @@
-import React, {useContext} from 'react'
+import React, { useContext } from 'react'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
@@ -7,12 +7,12 @@ import AccountCircle from '@material-ui/icons/AccountCircle'
 import Container from '@material-ui/core/Container'
 import PropTypes from 'prop-types'
 import s from './Layout.module.scss'
-import {useHistory} from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 
-import {Global} from '../../contexts/global'
+import { Global } from '../../contexts/global'
 
-export function Layout({name, userName, children}) {
-  const {domain} = useContext(Global)
+export function Layout({ name, userName, children }) {
+  const { domain } = useContext(Global)
   const history = useHistory()
 
   async function handleLogout() {
@@ -47,5 +47,8 @@ export function Layout({name, userName, children}) {
 Layout.propTypes = {
   name: PropTypes.string,
   userName: PropTypes.string,
-  children: PropTypes.children
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.element),
+    PropTypes.element,
+  ]),
 }

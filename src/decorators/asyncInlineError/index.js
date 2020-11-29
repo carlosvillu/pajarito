@@ -1,10 +1,10 @@
-const _runner = ({instance, original} = {}) => {
-  return function(...args) {
+const _runner = ({ instance, original } = {}) => {
+  return function (...args) {
     const response = []
     Object.defineProperty(response, '__INLINE_ERROR__', {
       enumerable: false,
       writable: true,
-      value: true
+      value: true,
     })
     try {
       const returns = original.apply(
@@ -12,12 +12,12 @@ const _runner = ({instance, original} = {}) => {
         args
       )
       return returns
-        .then(r => {
+        .then((r) => {
           response[0] = null
           response[1] = r
           return response
         })
-        .catch(e => {
+        .catch((e) => {
           response[0] = e
           response[1] = null
           return Promise.resolve(response)
@@ -31,7 +31,7 @@ const _runner = ({instance, original} = {}) => {
 }
 
 export const asyncInlineError = () => (target, fnName, descriptor) => {
-  const {value: fn, configurable, enumerable} = descriptor
+  const { value: fn, configurable, enumerable } = descriptor
 
   // https://github.com/jayphelps/core-decorators.js/blob/master/src/autobind.js
   return Object.assign(
@@ -42,7 +42,7 @@ export const asyncInlineError = () => (target, fnName, descriptor) => {
       get() {
         const _fnRunner = _runner({
           instance: this,
-          original: fn
+          original: fn,
         })
 
         if (this === target && !target.__STREAMIFY__) {
@@ -53,7 +53,7 @@ export const asyncInlineError = () => (target, fnName, descriptor) => {
           configurable: true,
           writable: true,
           enumerable: false,
-          value: _fnRunner
+          value: _fnRunner,
         })
         return _fnRunner
       },
@@ -62,11 +62,11 @@ export const asyncInlineError = () => (target, fnName, descriptor) => {
           configurable: true,
           writable: true,
           enumerable: true,
-          value: newValue
+          value: newValue,
         })
 
         return newValue
-      }
+      },
     }
   )
 }

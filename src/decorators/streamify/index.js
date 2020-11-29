@@ -1,29 +1,31 @@
-const isPromise = obj =>
+const isPromise = (obj) =>
   typeof obj !== 'undefined' && typeof obj.then === 'function'
 
-const defaultErrorHandler = err => {
+const defaultErrorHandler = (err) => {
   console.error(err)
 }
 
-const dispatchToListeners = ({onError, onNext, params, result}) => {
+const dispatchToListeners = ({ onError, onNext, params, result }) => {
   if (isPromise(result)) {
     result
-      .then(value => {
+      .then((value) => {
         if (value.__INLINE_ERROR__) {
           const [error, val] = value
           return !error
-            ? onNext({params, result: val})
-            : onError({params, error})
+            ? onNext({ params, result: val })
+            : onError({ params, error })
         }
-        onNext({params, result: value})
+        onNext({ params, result: value })
       })
-      .catch(error => onError({params, error}))
+      .catch((error) => onError({ params, error }))
   } else if (result) {
     if (result.__INLINE_ERROR__) {
       const [error, val] = result
-      return !error ? onNext({params, result: val}) : onError({params, error})
+      return !error
+        ? onNext({ params, result: val })
+        : onError({ params, error })
     }
-    onNext({params, result})
+    onNext({ params, result })
   }
 }
 
@@ -31,39 +33,40 @@ const createSubscription = (proto, method, originalMethod) => {
   let onNextListeners = []
   let onErrorListeners = []
 
-  proto[method] = function(...args) {
+  proto[method] = function (...args) {
     const params = args
     try {
       const result = originalMethod.apply(this, args)
-      dispatchToListeners({onError, onNext, params, result})
+      dispatchToListeners({ onError, onNext, params, result })
       return result
     } catch (error) {
-      onError({params, error})
+      onError({ params, error })
       throw error
     }
   }
 
-  const onNext = ({params, result}) => {
-    onNextListeners.forEach(listener => listener({params, result}))
+  const onNext = ({ params, result }) => {
+    onNextListeners.forEach((listener) => listener({ params, result }))
   }
 
-  const onError = ({params, error}) => {
-    onErrorListeners.forEach(listener => listener({params, error}))
+  const onError = ({ params, error }) => {
+    onErrorListeners.forEach((listener) => listener({ params, error }))
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   const subscribe = (onNext = () => {}, onError = defaultErrorHandler) => {
     onNextListeners.push(onNext)
     onErrorListeners.push(onError)
 
     return {
       dispose: () => {
-        onNextListeners = onNextListeners.filter(l => l !== onNext)
-        onErrorListeners = onErrorListeners.filter(l => l !== onError)
-      }
+        onNextListeners = onNextListeners.filter((l) => l !== onNext)
+        onErrorListeners = onErrorListeners.filter((l) => l !== onError)
+      },
     }
   }
 
-  return {subscribe}
+  return { subscribe }
 }
 
 const reducer = (Target, proto, method) => {
@@ -74,12 +77,12 @@ const reducer = (Target, proto, method) => {
 }
 
 export const streamify = (...methods) => {
-  return Target => {
+  return (Target) => {
     Target.prototype.__STREAMIFY__ = true
     Object.assign(
       Target.prototype,
       methods
-        .filter(method => !!Target.prototype[method])
+        .filter((method) => !!Target.prototype[method])
         .reduce(reducer.bind(null, Target), {})
     )
     return Target

@@ -1,6 +1,6 @@
 import React from 'react'
 // import React, {useState, useEffect, useContext} from 'react'
-import {Route, Redirect} from 'react-router-dom'
+import { Route, Redirect } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 // import {Global} from '../../contexts/global'
@@ -8,7 +8,7 @@ const EMPTY_DB = JSON.stringify({})
 const USERS_KEY = 'users'
 const CURRENT_USER_KEY = '__CURRENT_USER__'
 
-export function PrivateRoute({component: Component, ...rest}) {
+export function PrivateRoute({ component: Component, ...rest }) {
   // const {domain} = useContext(Global)
   // const [user, setUser] = useState(null)
 
@@ -35,14 +35,14 @@ export function PrivateRoute({component: Component, ...rest}) {
   return (
     <Route
       {...rest}
-      render={({location}) =>
+      render={({ location }) =>
         user ? (
           <Component user={user} />
         ) : (
           <Redirect
             to={{
               pathname: '/login',
-              state: {from: location}
+              state: { from: location },
             }}
           />
         )
@@ -52,5 +52,5 @@ export function PrivateRoute({component: Component, ...rest}) {
 }
 
 PrivateRoute.propTypes = {
-  component: PropTypes.elementType
+  component: PropTypes.elementType,
 }
