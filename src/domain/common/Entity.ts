@@ -1,5 +1,4 @@
-export class Entity {
-  toJSON() {
-    throw new Error('[Entity#toJSON] should be implemented')
-  }
+export abstract class Entity {
+  // TODO: add generic type to fix implicit any
+  abstract toJSON()
 }

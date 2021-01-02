@@ -3,11 +3,18 @@ import { Entity } from '../../common/Entity'
 import { UserEntity } from '../../user/Entities/UserEntity'
 import { BodyValueObject } from '../ValueObjects/BodyValueObject'
 
+interface TrinoJson {
+  id: string
+  timestamp: string
+  body: any
+  user: any
+}
+
 export class TrinoEntity extends Entity {
-  #timestamp
-  #body
-  #id
-  #user
+  #timestamp: string
+  #body: any
+  #id: string
+  #user: any
 
   static generateUUID() {
     return (

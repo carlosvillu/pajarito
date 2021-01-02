@@ -5,10 +5,10 @@ const isNODE = typeof window === 'undefined'
 
 export class UserServicesFactory {
   static currentUserService() {
-    return new CurrentUserService({
-      repository: isNODE
+    return new CurrentUserService(
+      isNODE
         ? UserRepositoriesFactory.inMemoryUserRepository()
-        : UserRepositoriesFactory.localStorageUserRepository(),
-    })
+        : UserRepositoriesFactory.localStorageUserRepository()
+    )
   }
 }

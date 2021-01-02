@@ -11,36 +11,34 @@ const isNODE = typeof window === 'undefined'
 
 export class UserUseCasesFactory {
   static currentUserUseCase() {
-    return new CurrentUserUseCase({
-      service: UserServicesFactory.currentUserService(),
-    })
+    return new CurrentUserUseCase(UserServicesFactory.currentUserService())
   }
 
   static logoutUserUseCase() {
-    return new LogoutUserUseCase({
-      repository: isNODE
+    return new LogoutUserUseCase(
+      isNODE
         ? UserRepositoriesFactory.inMemoryUserRepository()
-        : UserRepositoriesFactory.localStorageUserRepository(),
-    })
+        : UserRepositoriesFactory.localStorageUserRepository()
+    )
   }
 
   static loginUserUseCase() {
-    return new LoginUserUseCase({
-      repository: isNODE
+    return new LoginUserUseCase(
+      isNODE
         ? UserRepositoriesFactory.inMemoryUserRepository()
         : UserRepositoriesFactory.localStorageUserRepository(),
-      usernameValueObjectFactory: UserValueObjectsFactory.usernameValueObject,
-      passwordValueObjectFactory: UserValueObjectsFactory.passwordValueObject,
-    })
+      UserValueObjectsFactory.usernameValueObject,
+      UserValueObjectsFactory.passwordValueObject
+    )
   }
 
   static registerUserUseCase() {
-    return new RegisterUserUseCase({
-      repository: isNODE
+    return new RegisterUserUseCase(
+      isNODE
         ? UserRepositoriesFactory.inMemoryUserRepository()
         : UserRepositoriesFactory.localStorageUserRepository(),
-      usernameValueObjectFactory: UserValueObjectsFactory.usernameValueObject,
-      passwordValueObjectFactory: UserValueObjectsFactory.passwordValueObject,
-    })
+      UserValueObjectsFactory.usernameValueObject,
+      UserValueObjectsFactory.passwordValueObject
+    )
   }
 }

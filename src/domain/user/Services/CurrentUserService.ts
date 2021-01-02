@@ -1,16 +1,14 @@
 import { Service } from '../../common/Service'
 
 export class CurrentUserService extends Service {
-  #repository
-
-  constructor({ repository }) {
+  constructor(
+    private repository: any // TODO: add type, but a new one?
+  ) {
     super()
-
-    this.#repository = repository
   }
 
   async execute() {
-    const user = await this.#repository.current()
+    const user = await this.repository.current()
 
     return user
   }

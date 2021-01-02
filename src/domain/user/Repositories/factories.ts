@@ -10,10 +10,10 @@ export class UserRepositoriesFactory {
   }
 
   static localStorageUserRepository() {
-    return new LocalStorageUserRepository({
-      userEntityFactory: UserEntitiesFactory.userEntity,
-      statusValueObjectFactory: UserValueObjectsFactory.statusValueObject,
-      localStorage: window.localStorage,
-    })
+    return new LocalStorageUserRepository(
+      UserEntitiesFactory.userEntity,
+      UserValueObjectsFactory.statusValueObject,
+      window.localStorage
+    )
   }
 }

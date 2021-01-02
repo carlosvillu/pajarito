@@ -1,8 +1,6 @@
 import { ValueObject } from '../../common/ValueObject'
 
 export class StatusValueObject extends ValueObject {
-  #status
-
   static validate({ status }) {
     if (typeof status !== 'boolean') {
       throw new Error(
@@ -11,22 +9,21 @@ export class StatusValueObject extends ValueObject {
     }
   }
 
-  constructor({ status }) {
+  constructor(private status: boolean) {
     super()
-    this.#status = status
   }
 
   isOK() {
-    return this.#status
+    return this.status
   }
 
   value() {
-    return this.#status
+    return this.status
   }
 
   toJSON() {
     return {
-      status: this.#status,
+      status: this.status,
     }
   }
 }

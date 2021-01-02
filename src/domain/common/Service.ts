@@ -1,5 +1,4 @@
-export class Service {
-  execute() {
-    throw new Error('[Service#execute] should be implemented')
-  }
+export abstract class Service {
+  // TODO: add generic type to fix implicit any
+  abstract execute()
 }

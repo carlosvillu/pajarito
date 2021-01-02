@@ -1,5 +1,4 @@
-export class ValueObject {
-  toJSON() {
-    throw new Error('[ValueObject#toJSON] should be implemented')
-  }
+export abstract class ValueObject {
+  // TODO: add generic type to fix implicit any
+  abstract toJSON()
 }

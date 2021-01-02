@@ -1,5 +1,4 @@
-export class UseCase {
-  execute(_param) {
-    throw new Error('[UseCase#execute] should be implemented')
-  }
+export abstract class UseCase {
+  // TODO: add generic type to fix implicit any
+  abstract execute(params)
 }

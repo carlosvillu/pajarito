@@ -1,17 +1,9 @@
-export class UserRepository {
-  register(_param) {
-    throw new Error('[UserRepository#register] should be implemented')
-  }
+export abstract class UserRepository {
+  abstract register(_param)
 
-  login(_param) {
-    throw new Error('[UserRepository#login] should be implemented')
-  }
+  abstract login(_param)
 
-  logout() {
-    throw new Error('[UserRepository#logout] should be implemented')
-  }
+  abstract logout()
 
-  current() {
-    throw new Error('[UserRepository#current] should be implemented')
-  }
+  abstract current()
 }

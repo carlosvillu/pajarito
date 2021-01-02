@@ -12,20 +12,16 @@ interface UserData {
 }
 
 export class LocalStorageUserRepository extends UserRepository {
-  #statusValueObjectFactory
-  #userEntityFactory
-  #localStorage
-
-  constructor({ userEntityFactory, statusValueObjectFactory, localStorage }) {
+  constructor(
+    private userEntityFactory: any, // TODO: add type, but a new one?
+    private statusValueObjectFactory: any, // TODO: add type, but a new one?
+    private localStorage: Storage
+  ) {
     super()
-
-    this.#statusValueObjectFactory = statusValueObjectFactory
-    this.#userEntityFactory = userEntityFactory
-    this.#localStorage = localStorage
   }
 
   async current() {
-    const usersJSON = this.#localStorage.getItem(USERS_KEY) || EMPTY_DB
+    const usersJSON = this.localStorage.getItem(USERS_KEY) || EMPTY_DB
     const usersDB = JSON.parse(usersJSON)
 
     const currentUserJSON = usersDB[CURRENT_USER_KEY]
@@ -34,24 +30,24 @@ export class LocalStorageUserRepository extends UserRepository {
       throw new Error('[UserRepository#current] user NOT FOUND')
     }
 
-    return this.#userEntityFactory(currentUserJSON)
+    return this.userEntityFactory(currentUserJSON)
   }
 
   async logout() {
-    const usersJSON = this.#localStorage.getItem(USERS_KEY) || EMPTY_DB
+    const usersJSON = this.localStorage.getItem(USERS_KEY) || EMPTY_DB
     const usersDB = JSON.parse(usersJSON)
 
     const nextUsersDB = Object.assign(usersDB, {
       [CURRENT_USER_KEY]: undefined,
     })
 
-    this.#localStorage.setItem(USERS_KEY, JSON.stringify(nextUsersDB))
+    this.localStorage.setItem(USERS_KEY, JSON.stringify(nextUsersDB))
 
-    return this.#statusValueObjectFactory({ status: true })
+    return this.statusValueObjectFactory({ status: true })
   }
 
   async login({ username, password }) {
-    const usersJSON = this.#localStorage.getItem(USERS_KEY) || EMPTY_DB
+    const usersJSON = this.localStorage.getItem(USERS_KEY) || EMPTY_DB
     const usersDB: UserData[] = JSON.parse(usersJSON)
 
     const userJSON: UserData = Object.values(usersDB).find(
@@ -69,14 +65,14 @@ export class LocalStorageUserRepository extends UserRepository {
       },
     })
 
-    this.#localStorage.setItem(USERS_KEY, JSON.stringify(nextUsersDB))
+    this.localStorage.setItem(USERS_KEY, JSON.stringify(nextUsersDB))
 
-    return this.#userEntityFactory(userJSON)
+    return this.userEntityFactory(userJSON)
   }
 
   async register({ username, password }) {
     const newUserID = UserEntity.generateUUID()
-    const usersJSON = this.#localStorage.getItem(USERS_KEY) || EMPTY_DB
+    const usersJSON = this.localStorage.getItem(USERS_KEY) || EMPTY_DB
     const usersDB: UserData = JSON.parse(usersJSON)
 
     /**
@@ -107,9 +103,9 @@ export class LocalStorageUserRepository extends UserRepository {
       },
     })
 
-    this.#localStorage.setItem(USERS_KEY, JSON.stringify(nextUsersDB))
+    this.localStorage.setItem(USERS_KEY, JSON.stringify(nextUsersDB))
 
-    return this.#userEntityFactory({
+    return this.userEntityFactory({
       id: newUserID,
       username: username.value(),
     })

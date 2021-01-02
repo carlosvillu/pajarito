@@ -1,14 +1,6 @@
 import { Entity } from '../../common/Entity'
 
-interface User {
-  username: string
-  id: string
-}
-
 export class UserEntity extends Entity {
-  #username
-  #id
-
   static generateUUID() {
     let dt = new Date().getTime()
     const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
@@ -22,7 +14,7 @@ export class UserEntity extends Entity {
     return uuid
   }
 
-  static validate({ id, username }: User) {
+  static validate({ id, username }: { id: string; username: string }) {
     if (!username || !id) {
       throw new Error(
         `[UserEntity.validate] forbidden UserEntity username(${username}) id(${id})`
@@ -30,16 +22,14 @@ export class UserEntity extends Entity {
     }
   }
 
-  constructor({ id, username }: User) {
+  constructor(private id: string, private username: string) {
     super()
-    this.#username = username
-    this.#id = id
   }
 
-  toJSON(): User {
+  toJSON() {
     return {
-      username: this.#username,
-      id: this.#id,
+      username: this.username,
+      id: this.id,
     }
   }
 }

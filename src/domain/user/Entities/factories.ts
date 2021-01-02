@@ -4,6 +4,6 @@ export class UserEntitiesFactory {
   static userEntity({ id, username }) {
     UserEntity.validate({ id, username })
 
-    return new UserEntity({ id, username })
+    return new UserEntity(id, username)
   }
 }

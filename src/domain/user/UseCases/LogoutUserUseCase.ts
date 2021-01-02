@@ -2,21 +2,17 @@ import { streamify, asyncInlineError } from '../../../decorators'
 import { UseCase } from '../../common/UseCase'
 
 @streamify('execute')
-class LogoutUserUseCase extends UseCase {
-  #repository
-
-  constructor({ repository }) {
+export class LogoutUserUseCase extends UseCase {
+  constructor(
+    private repository: any // TODO: add type, but a new one?
+  ) {
     super()
-
-    this.#repository = repository
   }
 
   @asyncInlineError()
   async execute() {
-    const logoutUserStatus = await this.#repository.logout()
+    const logoutUserStatus = await this.repository.logout()
 
     return logoutUserStatus.toJSON()
   }
 }
-
-export { LogoutUserUseCase }

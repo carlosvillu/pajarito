@@ -3,8 +3,6 @@ import { ValueObject } from '../../common/ValueObject'
 const MIN_LENGTH = 4
 
 export class UserNameValueObject extends ValueObject {
-  #username
-
   static validate({ username }) {
     if (!username || !username.length || username.length < MIN_LENGTH) {
       throw new Error(
@@ -13,19 +11,17 @@ export class UserNameValueObject extends ValueObject {
     }
   }
 
-  constructor({ username }) {
+  constructor(private username: string) {
     super()
-
-    this.#username = username
   }
 
   value() {
-    return this.#username
+    return this.username
   }
 
   toJSON() {
     return {
-      username: this.#username,
+      username: this.username,
     }
   }
 }
