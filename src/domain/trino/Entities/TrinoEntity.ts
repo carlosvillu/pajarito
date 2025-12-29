@@ -8,6 +8,7 @@ export class TrinoEntity extends Entity {
   #body
   #id
   #user
+  #images
 
   static generateUUID() {
     return (
@@ -16,7 +17,7 @@ export class TrinoEntity extends Entity {
     )
   }
 
-  static validate({ body, id, user, timestamp }) {
+  static validate({ body, id, user, timestamp, images }) {
     if (!body || !id || !user || !timestamp) {
       throw new Error(
         `[TrinoEntity.validate] forbidden TrinoEntity body(${body}) id(${id}) user(${user}) timestamp(${timestamp})`
@@ -34,14 +35,21 @@ export class TrinoEntity extends Entity {
         `[TrinoEntity.validate] user is not instanceof UserEntity user(${user})`
       )
     }
+
+    if (images && !Array.isArray(images)) {
+      throw new Error(
+        `[TrinoEntity.validate] images must be an array if provided images(${images})`
+      )
+    }
   }
 
-  constructor({ body, id, user, timestamp }) {
+  constructor({ body, id, user, timestamp, images = [] }) {
     super()
     this.#timestamp = timestamp
     this.#id = id
     this.#body = body
     this.#user = user
+    this.#images = images
   }
 
   toJSON() {
@@ -50,6 +58,7 @@ export class TrinoEntity extends Entity {
       timestamp: this.#timestamp,
       body: this.#body.toJSON(),
       user: this.#user.toJSON(),
+      images: this.#images,
     }
   }
 }

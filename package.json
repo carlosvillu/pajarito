@@ -24,7 +24,9 @@
     "web-vitals": "^4.2.4"
   },
   "devDependencies": {
+    "@faker-js/faker": "^10.1.0",
     "@playwright/test": "^1.57.0",
+    "@testing-library/dom": "^10.4.1",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "eslint": "^8.57.1",
