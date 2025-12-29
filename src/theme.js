@@ -1,9 +1,9 @@
-import { createMuiTheme } from '@material-ui/core/styles'
+import { createTheme } from '@mui/material/styles'
 
 // A custom theme for this app
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
-    type: 'dark',
+    mode: 'dark',
     primary: {
       main: '#0c7bc0',
     },
@@ -15,8 +15,14 @@ const theme = createMuiTheme({
       paper: '#182530',
     },
   },
-  MuiAppBar: {
-    colorPrimary: 'red',
+  components: {
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          colorPrimary: '#0c7bc0',
+        },
+      },
+    },
   },
 })
 

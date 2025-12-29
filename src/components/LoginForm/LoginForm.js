@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useContext } from 'react'
-import Paper from '@material-ui/core/Paper'
+import Paper from '@mui/material/Paper'
 import s from './LoginForm.module.scss'
-import TextField from '@material-ui/core/TextField'
-import Typography from '@material-ui/core/Typography'
-import Button from '@material-ui/core/Button'
-import { Link, useHistory } from 'react-router-dom'
+import TextField from '@mui/material/TextField'
+import Typography from '@mui/material/Typography'
+import Button from '@mui/material/Button'
+import { Link, useNavigate } from 'react-router-dom'
 import { Global } from '../../contexts/global'
 
 export function LoginForm() {
   const { domain } = useContext(Global)
   const [data, setData] = useState({})
-  const history = useHistory()
+  const navigate = useNavigate()
 
   useEffect(() => {
     domain
@@ -21,15 +21,15 @@ export function LoginForm() {
           console.log(error) // eslint-disable-line no-console
           return null
         }
-        user && history.push('/')
+        user && navigate('/')
       })
-  }, [domain, history])
+  }, [domain, navigate])
 
   async function onLogin(e) {
     e.preventDefault()
     const [error] = await domain.get('loginUserUseCase').execute(data)
     if (error) return console.log(error) // eslint-disable-line no-console
-    history.push('/')
+    navigate('/')
   }
 
   function onChange(e) {

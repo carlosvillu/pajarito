@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react'
 import PropTypes from 'prop-types'
-import TextField from '@material-ui/core/TextField'
-import Button from '@material-ui/core/Button'
+import TextField from '@mui/material/TextField'
+import Button from '@mui/material/Button'
 import s from './AddTrinoForm.module.scss'
 
 import { Global } from '../../contexts/global'
