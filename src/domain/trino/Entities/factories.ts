@@ -4,7 +4,7 @@ import { TrinoValueObjectsFactory } from '../ValueObjects/factories'
 import { TrinoEntity } from './TrinoEntity'
 
 export class TrinoEntitiesFactory {
-  static trinoEntity({ body, id, user, timestamp }) {
+  static trinoEntity({ body, id, user, timestamp, images = [] }) {
     const bodyValueObject = TrinoValueObjectsFactory.bodyValueObject(body)
     const userEntity = UserEntitiesFactory.userEntity(user)
 
@@ -13,6 +13,7 @@ export class TrinoEntitiesFactory {
       timestamp,
       body: bodyValueObject,
       user: userEntity,
+      images,
     })
 
     return new TrinoEntity({
@@ -20,6 +21,7 @@ export class TrinoEntitiesFactory {
       id,
       user: userEntity,
       timestamp,
+      images,
     })
   }
 }

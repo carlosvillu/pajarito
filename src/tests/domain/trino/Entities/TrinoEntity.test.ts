@@ -17,6 +17,7 @@ describe('TrinoEntity', () => {
       body: createValidBody(),
       user: createValidUser(),
       timestamp: 1234567890,
+      images: [],
     })
 
   describe('constructor', () => {
@@ -31,6 +32,7 @@ describe('TrinoEntity', () => {
           id: 'user-123',
           username: 'testuser',
         },
+        images: [],
       })
     })
   })
@@ -65,6 +67,7 @@ describe('TrinoEntity', () => {
           body: createValidBody(),
           user: createValidUser(),
           timestamp: 1234567890,
+          images: [],
         })
       }).not.toThrow()
     })
@@ -76,6 +79,7 @@ describe('TrinoEntity', () => {
           body: null,
           user: createValidUser(),
           timestamp: 1234567890,
+          images: [],
         })
       }).toThrow(
         '[TrinoEntity.validate] forbidden TrinoEntity body(null) id(trino-123) user([object Object]) timestamp(1234567890)'
@@ -89,6 +93,7 @@ describe('TrinoEntity', () => {
           body: createValidBody(),
           user: createValidUser(),
           timestamp: 1234567890,
+          images: [],
         })
       }).toThrow(
         '[TrinoEntity.validate] forbidden TrinoEntity body([object Object]) id(null) user([object Object]) timestamp(1234567890)'
@@ -102,6 +107,7 @@ describe('TrinoEntity', () => {
           body: createValidBody(),
           user: null,
           timestamp: 1234567890,
+          images: [],
         })
       }).toThrow(
         '[TrinoEntity.validate] forbidden TrinoEntity body([object Object]) id(trino-123) user(null) timestamp(1234567890)'
@@ -115,6 +121,7 @@ describe('TrinoEntity', () => {
           body: createValidBody(),
           user: createValidUser(),
           timestamp: null,
+          images: [],
         })
       }).toThrow(
         '[TrinoEntity.validate] forbidden TrinoEntity body([object Object]) id(trino-123) user([object Object]) timestamp(null)'
@@ -128,6 +135,7 @@ describe('TrinoEntity', () => {
           body: { body: 'not a BodyValueObject' },
           user: createValidUser(),
           timestamp: 1234567890,
+          images: [],
         })
       }).toThrow(
         '[TrinoEntity.validate] body is not instanceof BodyValueObject body([object Object])'
@@ -141,9 +149,24 @@ describe('TrinoEntity', () => {
           body: createValidBody(),
           user: { id: 'user-123', username: 'testuser' },
           timestamp: 1234567890,
+          images: [],
         })
       }).toThrow(
         '[TrinoEntity.validate] user is not instanceof UserEntity user([object Object])'
+      )
+    })
+
+    it('should throw when images is not an array', () => {
+      expect(() => {
+        TrinoEntity.validate({
+          id: 'trino-123',
+          body: createValidBody(),
+          user: createValidUser(),
+          timestamp: 1234567890,
+          images: 'not an array',
+        })
+      }).toThrow(
+        '[TrinoEntity.validate] images must be an array if provided images(not an array)'
       )
     })
   })
@@ -160,6 +183,28 @@ describe('TrinoEntity', () => {
           id: 'user-123',
           username: 'testuser',
         },
+        images: [],
+      })
+    })
+
+    it('should return correct JSON representation with images', () => {
+      const trino = new TrinoEntity({
+        id: 'trino-123',
+        body: createValidBody(),
+        user: createValidUser(),
+        timestamp: 1234567890,
+        images: ['data:image/jpeg;base64,/9j/4AAQSkZJRg=='],
+      })
+
+      expect(trino.toJSON()).toEqual({
+        id: 'trino-123',
+        timestamp: 1234567890,
+        body: { body: 'Hello world' },
+        user: {
+          id: 'user-123',
+          username: 'testuser',
+        },
+        images: ['data:image/jpeg;base64,/9j/4AAQSkZJRg=='],
       })
     })
   })

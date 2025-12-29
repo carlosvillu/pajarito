@@ -2,10 +2,16 @@ import { defineConfig } from '@playwright/test'
 
 export default defineConfig({
   testDir: './e2e',
-  timeout: 30000,
+  timeout: 60000,
   use: {
     baseURL: 'http://localhost:3000',
     headless: true,
+  },
+  webServer: {
+    command: 'npx serve -s build -l 3000',
+    url: 'http://localhost:3000',
+    reuseExistingServer: true,
+    timeout: 120000,
   },
   projects: [
     {

@@ -16,13 +16,14 @@ class CreateTrinoUseCase extends UseCase {
   }
 
   @asyncInlineError()
-  async execute({ body: intro }) {
+  async execute({ body: intro, images = [] }) {
     const body = this.#bodyValueObjectFactory({ body: intro })
     const currentUser = await this.#currentUserService.execute()
 
     const trino = await this.#repository.create({
       body,
       user: currentUser,
+      images,
     })
 
     return trino.toJSON()
