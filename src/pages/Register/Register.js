@@ -1,5 +1,5 @@
 import React from 'react'
-import Container from '@material-ui/core/Container'
+import Container from '@mui/material/Container'
 import s from './Register.module.scss'
 import { RegisterForm } from '../../components/RegisterForm/RegisterForm'
 

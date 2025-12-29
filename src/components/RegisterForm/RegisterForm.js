@@ -1,17 +1,17 @@
 import React, { useState, useContext } from 'react'
-import Paper from '@material-ui/core/Paper'
+import Paper from '@mui/material/Paper'
 import s from './RegisterForm.module.scss'
-import TextField from '@material-ui/core/TextField'
-import Typography from '@material-ui/core/Typography'
-import Button from '@material-ui/core/Button'
-import { Link, useHistory } from 'react-router-dom'
+import TextField from '@mui/material/TextField'
+import Typography from '@mui/material/Typography'
+import Button from '@mui/material/Button'
+import { Link, useNavigate } from 'react-router-dom'
 
 import { Global } from '../../contexts/global'
 
 export function RegisterForm() {
   const { domain } = useContext(Global)
   const [data, setData] = useState({})
-  const history = useHistory()
+  const navigate = useNavigate()
 
   async function onRegister(e) {
     e.preventDefault()
@@ -20,7 +20,7 @@ export function RegisterForm() {
     if (error) {
       return window.alert(error.message)
     }
-    history.push('/login')
+    navigate('/login')
   }
 
   function onChange(e) {

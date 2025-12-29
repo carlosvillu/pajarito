@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react'
 import { Layout } from '../../components/Layout/Layout'
-import Container from '@material-ui/core/Container'
+import Container from '@mui/material/Container'
 import s from './Trinos.module.scss'
 import { TrinoList } from '../../components/TrinoList/TrinoList'
 import PropTypes from 'prop-types'

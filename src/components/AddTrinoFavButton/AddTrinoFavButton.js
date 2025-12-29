@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import Fab from '@material-ui/core/Fab'
-import AddIcon from '@material-ui/icons/Add'
-import Dialog from '@material-ui/core/Dialog'
-import MuiDialogTitle from '@material-ui/core/DialogTitle'
-import IconButton from '@material-ui/core/IconButton'
-import Typography from '@material-ui/core/Typography'
-import CloseIcon from '@material-ui/icons/Close'
+import Fab from '@mui/material/Fab'
+import AddIcon from '@mui/icons-material/Add'
+import Dialog from '@mui/material/Dialog'
+import DialogTitle from '@mui/material/DialogTitle'
+import IconButton from '@mui/material/IconButton'
+import Typography from '@mui/material/Typography'
+import CloseIcon from '@mui/icons-material/Close'
 import { AddTrinoForm } from '../AddTrinoForm/AddTrinoForm'
 import s from './AddTrinoFavButton.module.scss'
 
@@ -30,7 +30,7 @@ export function AddTrinoFavButton({ user }) {
         fullWidth
         maxWidth="sm"
       >
-        <MuiDialogTitle
+        <DialogTitle
           disableTypography
           className={s['add-trino-fav-button__dialog-header']}
         >
@@ -38,7 +38,7 @@ export function AddTrinoFavButton({ user }) {
           <IconButton aria-label="close" onClick={() => setOpen(false)}>
             <CloseIcon />
           </IconButton>
-        </MuiDialogTitle>
+        </DialogTitle>
         <AddTrinoForm user={user} cb={() => setOpen(false)} />
       </Dialog>
     </>

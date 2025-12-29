@@ -1,19 +1,19 @@
 import React, { useContext } from 'react'
-import AppBar from '@material-ui/core/AppBar'
-import Toolbar from '@material-ui/core/Toolbar'
-import Typography from '@material-ui/core/Typography'
-import Button from '@material-ui/core/Button'
-import AccountCircle from '@material-ui/icons/AccountCircle'
-import Container from '@material-ui/core/Container'
+import AppBar from '@mui/material/AppBar'
+import Toolbar from '@mui/material/Toolbar'
+import Typography from '@mui/material/Typography'
+import Button from '@mui/material/Button'
+import AccountCircle from '@mui/icons-material/AccountCircle'
+import Container from '@mui/material/Container'
 import PropTypes from 'prop-types'
 import s from './Layout.module.scss'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import { Global } from '../../contexts/global'
 
 export function Layout({ name, userName, children }) {
   const { domain } = useContext(Global)
-  const history = useHistory()
+  const navigate = useNavigate()
 
   async function handleLogout() {
     const [error] = await domain.get('logoutUserUseCase').execute()
@@ -21,7 +21,7 @@ export function Layout({ name, userName, children }) {
     if (error) {
       return window.alert(error.message)
     }
-    history.push('/login')
+    navigate('/login')
   }
 
   return (
