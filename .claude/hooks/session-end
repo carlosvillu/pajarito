@@ -1,0 +1,21 @@
+#!/bin/bash
+# Hook que se ejecuta antes de finalizar la sesión de Claude Code
+# Ejecuta los tests unitarios y E2E para asegurar que todo pasa
+
+set -e
+
+echo "=== Claude Code Session End Hook ==="
+echo "Ejecutando tests antes de finalizar la sesión..."
+
+# Ejecutar tests unitarios
+echo ""
+echo "--- Tests Unitarios ---"
+npm test
+
+# Ejecutar tests E2E
+echo ""
+echo "--- Tests E2E ---"
+npm run test:e2e
+
+echo ""
+echo "=== Todos los tests pasaron correctamente ==="
