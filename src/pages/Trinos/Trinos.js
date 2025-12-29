@@ -1,5 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react'
-import { Layout } from '../../components/Layout/Layout'
+import React, { useEffect, useContext } from 'react'
 import Container from '@mui/material/Container'
 import s from './Trinos.module.scss'
 import { TrinoList } from '../../components/TrinoList/TrinoList'
@@ -8,55 +7,42 @@ import { AddTrinoFavButton } from '../../components/AddTrinoFavButton/AddTrinoFa
 
 import { Global } from '../../contexts/global'
 
-export function Trinos({ user }) {
+export function Trinos({ trinos, user, optimisticTrino, isSubmitting }) {
   const { domain } = useContext(Global)
-  const [trinos, setTrinos] = useState([])
-  const [error, setError] = useState(null)
 
-  useEffect(() => {
-    async function fn() {
-      const [error, data] = await domain.get('listTrinoUseCase').execute()
-
-      if (error) {
-        return setError({
-          name: error.constructor.name,
-          message: error.message,
-        })
-      }
-
-      return setTrinos(data.trinos)
-    }
-
-    fn()
-  }, [domain])
-
+  // Subscribe to new trinos from other sessions
   useEffect(() => {
     const createTrinoUseCase$ = domain
       .get('createTrinoUseCase')
       .$.execute.subscribe(
-        // eslint-disable-line
-        ({ result }) => {
-          setTrinos([result, ...trinos])
-        }, // eslint-disable-line
+        () => {
+          // This will be handled by revalidation
+        },
         (error) => {
           window.alert(error)
-        } // eslint-disable-line
+        }
       )
 
     return () => createTrinoUseCase$.dispose()
-  }, [domain, trinos])
+  }, [domain])
+
+  // Use optimistic trino if available
+  const displayTrinos = optimisticTrino ? [optimisticTrino, ...trinos] : trinos
 
   return (
-    <Layout name="Trinos" userName={user.username}>
-      <Container maxWidth="sm" className={s.trinos__container}>
-        {error ? <div>Error to get trinos</div> : <TrinoList trinos={trinos} />}
-      </Container>
-
-      <AddTrinoFavButton user={user} />
-    </Layout>
+    <Container maxWidth="sm" className={s.trinos__container}>
+      {optimisticTrino && (
+        <div className={s.trinos__optimistic}>Posting...</div>
+      )}
+      <TrinoList trinos={displayTrinos} />
+      <AddTrinoFavButton user={user} isSubmitting={isSubmitting} />
+    </Container>
   )
 }
 
 Trinos.propTypes = {
+  trinos: PropTypes.arrayOf(PropTypes.object),
   user: PropTypes.object,
+  optimisticTrino: PropTypes.object,
+  isSubmitting: PropTypes.bool,
 }

@@ -76,7 +76,7 @@ describe('CreateTrinoUseCase', () => {
       expect(mockRepository.create).toHaveBeenCalledWith(
         expect.objectContaining({
           images: mockImages,
-        }),
+        })
       )
     })
 

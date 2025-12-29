@@ -1,11 +1,7 @@
 import { fileToBase64, validateImages } from '../../utils/fileToBase64'
 
 describe('fileToBase64', () => {
-  const createMockFile = (
-    name: string,
-    type: string,
-    size: number,
-  ): File => {
+  const createMockFile = (name: string, type: string, size: number): File => {
     const file = new File([], name, { type })
     Object.defineProperty(file, 'size', { value: size })
     return file

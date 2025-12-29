@@ -8,7 +8,7 @@ export default defineConfig({
     headless: true,
   },
   webServer: {
-    command: 'npx serve -s build -l 3000',
+    command: 'python3 -m http.server 3000',
     url: 'http://localhost:3000',
     reuseExistingServer: true,
     timeout: 120000,
