@@ -2,12 +2,13 @@ import React from 'react'
 import { createRoot } from 'react-dom/client'
 import CssBaseline from '@mui/material/CssBaseline'
 import { ThemeProvider } from '@mui/material/styles'
-import { AppRoutes } from './Routes'
+import { RouterProvider } from 'react-router'
+import { router } from './router'
 import theme from './theme'
 import './index.css'
 
 import { Global } from './contexts/global'
-import { Pajarito } from './domain'
+import { Pajarito } from './domain/index.ts'
 
 const domain = new Pajarito()
 const container = document.getElementById('root')
@@ -17,7 +18,7 @@ root.render(
   <Global.Provider value={{ domain }}>
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <AppRoutes />
+      <RouterProvider router={router} />
     </ThemeProvider>
   </Global.Provider>
 )

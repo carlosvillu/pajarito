@@ -1,67 +1,68 @@
-import React, { useState, useContext } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import Paper from '@mui/material/Paper'
 import s from './RegisterForm.module.scss'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, Form, useNavigation } from 'react-router'
 
-import { Global } from '../../contexts/global'
-
-export function RegisterForm() {
-  const { domain } = useContext(Global)
-  const [data, setData] = useState({})
-  const navigate = useNavigate()
-
-  async function onRegister(e) {
-    e.preventDefault()
-    const [error] = await domain.get('registerUserUseCase').execute(data)
-
-    if (error) {
-      return window.alert(error.message)
-    }
-    navigate('/login')
-  }
-
-  function onChange(e) {
-    const { name, value } = e.target
-
-    setData({ ...data, [name]: value })
-  }
+export function RegisterForm({ actionData }) {
+  const navigation = useNavigation()
+  const isSubmitting = navigation.state === 'submitting'
 
   return (
     <Paper elevation={3} className={s['register-form']}>
       <Typography variant="h4" component="h1">
         Register
       </Typography>
-      <form
-        noValidate
-        className={s['register-form__form']}
-        onSubmit={onRegister}
-      >
+      <Form method="post" noValidate className={s['register-form__form']}>
         <TextField
           name="username"
           label="User Name"
           variant="outlined"
-          onChange={onChange}
+          required
+          disabled={isSubmitting}
         />
         <TextField
           name="password"
           label="Password"
           variant="outlined"
           type="password"
-          onChange={onChange}
+          required
+          disabled={isSubmitting}
         />
 
+        {actionData?.error && (
+          <Typography color="error" variant="body2">
+            {actionData.error}
+          </Typography>
+        )}
+
         <div className={s['register-form__actions']}>
-          <Button type="Button" color="primary" component={Link} to="/login">
+          <Button
+            type="button"
+            color="primary"
+            component={Link}
+            to="/login"
+            disabled={isSubmitting}
+          >
             Login
           </Button>
-          <Button type="submit" color="primary" variant="contained">
-            Create User
+          <Button
+            type="submit"
+            color="primary"
+            variant="contained"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? 'Creating...' : 'Create User'}
           </Button>
         </div>
-      </form>
+      </Form>
     </Paper>
   )
+}
+
+RegisterForm.propTypes = {
+  actionData: PropTypes.object,
 }

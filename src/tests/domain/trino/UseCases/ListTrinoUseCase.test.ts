@@ -10,7 +10,8 @@ describe('ListTrinoUseCase', () => {
     mockRepository = {
       all: jest.fn(),
     }
-    mockErrorFactory = () => new Error('[TrinoRepository#all] something went wrong')
+    mockErrorFactory = () =>
+      new Error('[TrinoRepository#all] something went wrong')
     useCase = new ListTrinoUseCase({
       repository: mockRepository,
       somethingWrongTrinoErrorFactory: mockErrorFactory,

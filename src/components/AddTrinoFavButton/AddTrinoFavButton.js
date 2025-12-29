@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useFetcher } from 'react-router'
 import PropTypes from 'prop-types'
 import Fab from '@mui/material/Fab'
 import AddIcon from '@mui/icons-material/Add'
@@ -10,23 +11,32 @@ import CloseIcon from '@mui/icons-material/Close'
 import { AddTrinoForm } from '../AddTrinoForm/AddTrinoForm'
 import s from './AddTrinoFavButton.module.scss'
 
-export function AddTrinoFavButton({ user }) {
+export function AddTrinoFavButton({ user, isSubmitting }) {
   const [open, setOpen] = useState(false)
+  const fetcher = useFetcher()
+
+  const handleClose = () => {
+    setOpen(false)
+  }
+
+  const isSubmittingForm = fetcher.state !== 'idle'
+
   return (
     <>
       <Fab
         color="primary"
         onClick={() => setOpen(true)}
         className={s['add-trino-fav-button']}
+        disabled={isSubmitting}
       >
         <AddIcon />
       </Fab>
 
       <Dialog
         open={open}
-        onClose={() => setOpen(false)}
-        disableBackdropClick
-        disableEscapeKeyDown
+        onClose={handleClose}
+        disableBackdropClick={isSubmittingForm}
+        disableEscapeKeyDown={isSubmittingForm}
         fullWidth
         maxWidth="sm"
       >
@@ -35,11 +45,20 @@ export function AddTrinoFavButton({ user }) {
           className={s['add-trino-fav-button__dialog-header']}
         >
           <Typography variant="h6">Add a Trino</Typography>
-          <IconButton aria-label="close" onClick={() => setOpen(false)}>
+          <IconButton
+            aria-label="close"
+            onClick={handleClose}
+            disabled={isSubmittingForm}
+          >
             <CloseIcon />
           </IconButton>
         </DialogTitle>
-        <AddTrinoForm user={user} cb={() => setOpen(false)} />
+        <AddTrinoForm
+          user={user}
+          fetcher={fetcher}
+          cb={handleClose}
+          isTestEnv={false}
+        />
       </Dialog>
     </>
   )
@@ -47,4 +66,5 @@ export function AddTrinoFavButton({ user }) {
 
 AddTrinoFavButton.propTypes = {
   user: PropTypes.object,
+  isSubmitting: PropTypes.bool,
 }

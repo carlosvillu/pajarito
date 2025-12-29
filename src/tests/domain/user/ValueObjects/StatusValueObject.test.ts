@@ -43,7 +43,9 @@ describe('StatusValueObject', () => {
     it('should throw when status is undefined', () => {
       expect(() => {
         StatusValueObject.validate({ status: undefined })
-      }).toThrow('[StatusValueObject.validate] status(undefined) should be boolean')
+      }).toThrow(
+        '[StatusValueObject.validate] status(undefined) should be boolean'
+      )
     })
 
     it('should throw when status is a string', () => {

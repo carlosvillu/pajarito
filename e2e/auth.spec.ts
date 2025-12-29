@@ -35,7 +35,9 @@ test.describe('Register', () => {
     await expect(page.getByRole('heading', { name: 'Register' })).toBeVisible()
     await expect(page.locator('input[name="username"]')).toBeVisible()
     await expect(page.locator('input[name="password"]')).toBeVisible()
-    await expect(page.getByRole('button', { name: 'Create User' })).toBeVisible()
+    await expect(
+      page.getByRole('button', { name: 'Create User' })
+    ).toBeVisible()
   })
 
   test('should navigate to login page', async ({ page }) => {

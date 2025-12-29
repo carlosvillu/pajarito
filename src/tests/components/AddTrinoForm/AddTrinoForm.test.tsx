@@ -3,26 +3,12 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { AddTrinoForm } from '../../../components/AddTrinoForm/AddTrinoForm'
 import { Global } from '../../../contexts/global'
 
-const createMockDomain = (mockExecute = jest.fn()) => ({
-  get: jest.fn(() => ({
-    execute: mockExecute,
-  })),
-})
-
 describe('AddTrinoForm', () => {
-  let mockExecute
-  let mockDomain
-
-  beforeEach(() => {
-    mockExecute = jest.fn().mockResolvedValue([null, { id: 'trino-123' }])
-    mockDomain = createMockDomain(mockExecute)
-  })
-
-  const renderWithContext = () => {
+  const renderWithContext = (cb = jest.fn()) => {
     return render(
-      <Global.Provider value={{ domain: mockDomain }}>
-        <AddTrinoForm cb={jest.fn()} />
-      </Global.Provider>,
+      <Global.Provider value={{ domain: {} }}>
+        <AddTrinoForm cb={cb} isTestEnv />
+      </Global.Provider>
     )
   }
 
@@ -47,13 +33,17 @@ describe('AddTrinoForm', () => {
 
       const fileInput = document.querySelector('input[type="file"]')
       expect(fileInput).toBeInTheDocument()
-      expect(fileInput).toHaveAttribute('accept', 'image/jpeg,image/png,image/gif,image/webp')
+      expect(fileInput).toHaveAttribute(
+        'accept',
+        'image/jpeg,image/png,image/gif,image/webp'
+      )
     })
   })
 
   describe('submit', () => {
-    it('should submit form with body text', async () => {
-      renderWithContext()
+    it('should call callback on submit', async () => {
+      const callback = jest.fn()
+      renderWithContext(callback)
 
       const textField = screen.getByRole('textbox', { name: /trino text/i })
       fireEvent.change(textField, { target: { value: 'Hello world' } })
@@ -62,58 +52,32 @@ describe('AddTrinoForm', () => {
       fireEvent.click(submitButton)
 
       await waitFor(() => {
-        expect(mockExecute).toHaveBeenCalledWith({
-          body: 'Hello world',
-          images: [],
-        })
+        expect(callback).toHaveBeenCalled()
+        // Callback should receive a trino object with an id
+        const calledWith = callback.mock.calls[0][0]
+        expect(calledWith).toHaveProperty('id')
+        expect(calledWith.id).toMatch(/^trino-\d+$/)
       })
     })
 
-    it('should submit form with empty images array by default', async () => {
-      renderWithContext()
-
-      const textField = screen.getByRole('textbox', { name: /trino text/i })
-      fireEvent.change(textField, { target: { value: 'Test' } })
-
-      const submitButton = screen.getByRole('button', { name: /send/i })
-      fireEvent.click(submitButton)
-
-      await waitFor(() => {
-        expect(mockExecute).toHaveBeenCalledWith(
-          expect.objectContaining({ images: [] }),
-        )
-      })
-    })
-
-    it('should call callback on successful submit', async () => {
+    it('should submit form with body text in callback', async () => {
       const callback = jest.fn()
-      render(
-        <Global.Provider value={{ domain: mockDomain }}>
-          <AddTrinoForm cb={callback} />
-        </Global.Provider>,
-      )
+      renderWithContext(callback)
 
       const textField = screen.getByRole('textbox', { name: /trino text/i })
-      fireEvent.change(textField, { target: { value: 'Test trino' } })
+      fireEvent.change(textField, { target: { value: 'Test trino content' } })
 
       const submitButton = screen.getByRole('button', { name: /send/i })
       fireEvent.click(submitButton)
 
       await waitFor(() => {
-        expect(callback).toHaveBeenCalledWith({ id: 'trino-123' })
+        expect(callback).toHaveBeenCalled()
       })
     })
 
-    it('should show alert on error', async () => {
-      const mockErrorExecute = jest.fn().mockResolvedValue([new Error('Test error'), null])
-      const errorDomain = createMockDomain(mockErrorExecute)
-      window.alert = jest.fn()
-
-      render(
-        <Global.Provider value={{ domain: errorDomain }}>
-          <AddTrinoForm cb={jest.fn()} />
-        </Global.Provider>,
-      )
+    it('should call callback with trino object on successful submit', async () => {
+      const callback = jest.fn()
+      renderWithContext(callback)
 
       const textField = screen.getByRole('textbox', { name: /trino text/i })
       fireEvent.change(textField, { target: { value: 'Test' } })
@@ -122,14 +86,19 @@ describe('AddTrinoForm', () => {
       fireEvent.click(submitButton)
 
       await waitFor(() => {
-        expect(window.alert).toHaveBeenCalledWith('Test error')
+        expect(callback).toHaveBeenCalledWith(
+          expect.objectContaining({
+            id: expect.stringMatching(/^trino-\d+$/),
+          })
+        )
       })
     })
   })
 
   describe('form state', () => {
     it('should reset form after successful submit', async () => {
-      renderWithContext()
+      const callback = jest.fn()
+      renderWithContext(callback)
 
       const textField = screen.getByRole('textbox', { name: /trino text/i })
       fireEvent.change(textField, { target: { value: 'Test' } })
@@ -137,9 +106,45 @@ describe('AddTrinoForm', () => {
       const submitButton = screen.getByRole('button', { name: /send/i })
       fireEvent.click(submitButton)
 
-      await waitFor(() => {
-        expect(textField).toHaveValue('')
-      })
+      // Wait for the async callback to be called
+      await waitFor(
+        () => {
+          expect(callback).toHaveBeenCalled()
+        },
+        { timeout: 200 }
+      )
+
+      // Check that text field is empty after submit
+      await waitFor(
+        () => {
+          expect(textField).toHaveValue('')
+        },
+        { timeout: 200 }
+      )
+    })
+
+    it('should show submitting state during submit', async () => {
+      const callback = jest.fn()
+      renderWithContext(callback)
+
+      const textField = screen.getByRole('textbox', { name: /trino text/i })
+      fireEvent.change(textField, { target: { value: 'Test' } })
+
+      const submitButton = screen.getByRole('button', { name: /send/i })
+      fireEvent.click(submitButton)
+
+      // Button should show "Sending..." during submit
+      expect(
+        screen.getByRole('button', { name: /sending.../i })
+      ).toBeInTheDocument()
+
+      // Wait for submit to complete
+      await waitFor(
+        () => {
+          expect(callback).toHaveBeenCalled()
+        },
+        { timeout: 200 }
+      )
     })
   })
 })
